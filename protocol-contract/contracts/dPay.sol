@@ -7,21 +7,23 @@ import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contract
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {IAToken} from "@aave/core-v3/contracts/interfaces/IAToken.sol";
 import "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import "./intefaces/IAaveFaucet.sol";
 import "./Types.sol";
+import "./DPayReward.sol";
 
-contract dPay is AxelarExecutable, ReentrancyGuard, Ownable {
+contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   // variables
   using SafeMath for uint256;
 
   IAxelarGasService gasReceiver;
   IERC20 usdc;
   IERC20 aUsdc;
+  IAToken aToken;
   IAaveFaucet aaveFaucet;
   IPool iPool;
 
@@ -30,11 +32,23 @@ contract dPay is AxelarExecutable, ReentrancyGuard, Ownable {
   mapping(uint256 => Types.StreamDetail) public paymentStream;
   mapping(address => uint256[]) public senders;
   mapping(address => uint256[]) public recipients;
+  mapping(address => Types.RewardDetail) public trackReward;
+  mapping(string => uint256) public times;
 
   // modifiers
+  modifier streamExist(uint256 _id) {
+    require(paymentStream[_id].isEntity == true, "Stream doesn't exist");
+    _;
+  }
+
+  modifier isSender(uint256 _id, address _sender) {
+    require(paymentStream[_id].sender == _sender, "You are not the sender");
+    _;
+  }
 
   // events
-  event _deposit(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
+  event _Deposit(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
+  event _Withdraw(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
 
   // constructor
   constructor(
@@ -43,58 +57,145 @@ contract dPay is AxelarExecutable, ReentrancyGuard, Ownable {
     address _usdc,
     address _aaveFaucet,
     address _aUsdc,
-    address _iPool
+    address _iPool,
+    address _aToken
   ) AxelarExecutable(_gateway) {
     gasReceiver = IAxelarGasService(_gasReceiver);
     usdc = IERC20(_usdc);
-    aaveFaucet = IERC20(_aaveFaucet);
+    aaveFaucet = IAaveFaucet(_aaveFaucet);
     aUsdc = IERC20(_aUsdc);
     iPool = IPool(_iPool);
+    aToken = IAToken(_aToken);
+
+    times['seconds'] = 1;
+    times['hours'] = 3600;
+    times['days'] = 86400;
+    times['months'] = 2628288;
+    times['years'] = 31536000;
+
   }
   // methods
 
   // write methods
   function deposit(
-    uint256 amount
+    uint256 _amount,
+    address _recipient,
+    string memory _times
   ) external nonReentrant {
     // validation
-    require(usdc.balanceOf(msg.sender) >= amount, "insufficient balance");
-    require(amount >= 1e8, "minimum deposit 100 usdc");
+    require(usdc.balanceOf(msg.sender) >= _amount, "insufficient balance");
+    require(_amount >= 1e8, "minimum deposit 100 usdc");
 
     // logics
-    usdc.transferFrom(msg.sender, address(this), amount);
-    aaveFaucet.mint(address(_aUsdc), address(this), amount);
+    usdc.transferFrom(msg.sender, address(this), _amount);
+    _deposit(
+      msg.sender,
+      _amount,
+      _recipient,
+      _times,
+      "Ethereum"
+    );
+  }
+
+  function _deposit(
+    address _sender,
+    uint256 _amount,
+    address _recipient,
+    string memory _times,
+    string memory _fromChain
+  ) internal {
     
-    TotalValueLock += TotalValueLock;
+    DPayReward payReward;
 
-    aUsdc.approve(address(iPool), amount);
-    iPool.supply(address(_aUsdc), amount, address(this), 0);
-
-    emit _deposit(msg.sender, lastId, 'Ethereum', amount);
-  }
-
-  function withdraw(uint256 amount) external userExist(msg.sender) nonReentrant {
-    require(userData[msg.sender].balance >= amount, "insufficient balance");
-
-    totalDeposit -= amount;
-
-    iPool.withdraw(address(usdc), amount, address(this));
-
-    userData[msg.sender].balance -= amount;
-
-    if(userData[msg.sender].balance == 0) {
-      Utils.deleteArrayByValue(msg.sender, listUserData);
+    // if RewardDetail is exist then set the instance if it is not then create the new one
+    if(trackReward[_sender].isEntity == true) {
+      payReward = DPayReward(trackReward[_sender].rewardContract);
+    } else {
+      payReward = new DPayReward(
+        address(this),
+        address(aToken),
+        address(iPool),
+        address(usdc)
+      );
+      trackReward[_sender].isEntity = true;
+      trackReward[_sender].sender = _sender;
+      trackReward[_sender].rewardContract = address(payReward);
     }
+    
+    TotalValueLock += _amount;
+    payReward.addTotalDeposit(_amount);
 
-    usdc.safeTransfer(msg.sender, amount);
+    // set stream detail
+    Types.StreamDetail memory stream = Types.StreamDetail({
+      isEntity: true,
+      sender: _sender,
+      receiver: _recipient,
+      amount: _amount,
+      remainingBalance: _amount,
+      lastClaimTime: block.timestamp,
+      startTime: block.timestamp,
+      ratePerSecond: _amount.div(times[_times])
+    });
+    
+    lastId++;
+    paymentStream[lastId] = stream;
+    
+    // set streamId for ongoing and ingoing address
+    senders[_sender].push(lastId);
+    recipients[_recipient].push(lastId);
 
-    emit _withdraw(msg.sender, 'Polygon', roundId, amount);
+    usdc.approve(address(iPool), _amount);
+    iPool.supply(address(usdc), _amount, trackReward[_sender].rewardContract, 0);
+
+    emit _Deposit(msg.sender, lastId, _fromChain, _amount);
   }
 
-  // view methods
-  function getClaimablePrize() public view returns (uint256) {
-    DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
-    return (aToken.scaledBalanceOf(address(this)).mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
+  function withdraw(
+    uint256 _id
+  ) external streamExist(_id) nonReentrant {
+
+    uint256 amount = _withdraw(
+      _id,
+      msg.sender,
+      "Ethereum"
+    );
+    usdc.transfer(msg.sender, amount);
   }
 
+  function _withdraw(
+    uint256 _id,
+    address _recipient,
+    string memory _toChain
+  ) internal returns (uint256) {
+    // validation
+    require(paymentStream[_id].receiver == _recipient, "You are not the recipeint");
+
+    // logics
+    DPayReward payReward = DPayReward(trackReward[paymentStream[_id].sender].rewardContract);
+    uint256 amount = _calculateAmountWithdraw(_id);
+
+    TotalValueLock -= amount;
+    paymentStream[_id].remainingBalance -= amount;
+    paymentStream[_id].lastClaimTime = block.timestamp;
+
+    payReward.withdraw(amount);
+    emit _Withdraw(_recipient, _id, _toChain, amount);
+
+    return amount;
+  }
+
+  // view functions
+  function _calculateAmountWithdraw(
+    uint256 _id
+  ) internal view returns (uint256) {
+    if(paymentStream[_id].lastClaimTime == block.timestamp) {
+      return 0;
+    } else {
+      uint256 amount = (block.timestamp - paymentStream[_id].lastClaimTime).mul(paymentStream[_id].ratePerSecond);
+      if(amount > paymentStream[_id].remainingBalance) {
+        return paymentStream[_id].remainingBalance;
+      }
+      return amount;
+    }
+  }
 }

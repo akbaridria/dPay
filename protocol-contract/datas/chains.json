@@ -1,6 +1,7 @@
 [
   {
     "name": "Moonbeam",
+    "chainNa": "moonbeam",
     "chainId": 1287,
     "rpc": "https://rpc.api.moonbase.moonbeam.network",
     "gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
@@ -31,6 +32,7 @@
   },
   {
     "name": "Polygon",
+    "chainName": "polygon",
     "chainId": 80001,
     "rpc": "https://rpc-mumbai.maticvigil.com",
     "gateway": "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B",
@@ -64,6 +66,7 @@
   },
   {
     "name": "Avalanche",
+    "chainName": "avalanche",
     "chainId": 43113,
     "rpc": "https://api.avax-test.network/ext/bc/C/rpc",
     "gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
@@ -90,6 +93,7 @@
   },
   {
     "name": "binance",
+    "chainName": "binance",
     "chainId": 97,
     "rpc": "https://bsc-testnet.public.blastapi.io",
     "gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
@@ -116,6 +120,7 @@
   },
   {
     "name": "Fantom",
+    "chainName": "fantom",
     "chainId": 4002,
     "rpc": "https://rpc.testnet.fantom.network",
     "gateway": "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
@@ -142,6 +147,7 @@
   },
   {
     "name": "aurora",
+    "chainName": "aurora",
     "chainId": 1313161555,
     "rpc": "https://testnet.aurora.dev",
     "gateway": "0x304acf330bbE08d1e512eefaa92F6a57871fD895",
@@ -168,6 +174,7 @@
   },
   {
     "name": "celo",
+    "chainName": "celo",
     "chainId": 44787,
     "rpc": "https://alfajores-forno.celo-testnet.org",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
@@ -194,6 +201,7 @@
   },
   {
     "name": "arbitrum",
+    "chainName": "arbitrum",
     "chainId": 421613,
     "rpc": "https://goerli-rollup.arbitrum.io/rpc",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
@@ -220,6 +228,7 @@
   },
   {
     "name": "optimism",
+    "chainName": "optimism",
     "chainId": 420,
     "rpc": "https://goerli.optimism.io",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
@@ -246,6 +255,7 @@
   },
   {
     "name": "base",
+    "chainName": "base",
     "chainId": 84531,
     "rpc": "https://goerli.base.org",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
@@ -272,14 +282,16 @@
   },
   {
     "name": "ethereum-2",
+    "chainName": "ethereum",
     "chainId": 5,
     "rpc": "https://rpc.goerli.eth.gateway.fm",
     "ipool": "0x7b5C526B7F8dfdff278b4a3e045083FBA4028790",
     "usdc": "0x65aFADD39029741B3b8f0756952C74678c9cEC93",
-    "aUsdc": "0x8Be59D90A7Dc679C5cE5a7963cD1082dAB499918",
+    "aaveFaucet": "0xA70D8aD6d26931d0188c642A66de3B6202cDc5FA",
+    "aToken": "0x8Be59D90A7Dc679C5cE5a7963cD1082dAB499918",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x2266677D9d85064f8d37c4a0C9c1f158DBFd611e",
+    "contractAddress": "0xbe61a4dd675a385c24d1012b8e354a03e4e3a445",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": true,
     "logo": "LogosEthereum",
@@ -301,6 +313,7 @@
   },
   {
     "name": "linea",
+    "chainName": "linea",
     "chainId": 59140,
     "rpc": "https://rpc.goerli.linea.build",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",

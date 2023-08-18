@@ -75,7 +75,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       optimisticGoerli: process.env.OPTIMISM_API_KEY as string,
       goerli: process.env.ETHERSCAN_API_KEY as string,
-      baseGoerli: process.env.BASESCAN_API_KEY as string,
+      base: process.env.BASESCAN_API_KEY as string,
       moonbaseAlpha: process.env.MOONBEAMSCAN_API_KEY as string,
       polygonMumbai: process.env.POLYGONSCAN_API_KEY as string,
       avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY as string,
@@ -93,6 +93,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api.lineascan.build/api",
           browserURL: "https://goerli.lineascan.build/"
+        }
+      },
+      {
+        network: "base",
+        chainId: 84531,
+        urls: {
+          apiURL: "https://api.goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org/"
         }
       },
       {

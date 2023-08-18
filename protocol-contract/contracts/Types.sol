@@ -9,6 +9,13 @@ library Types {
     uint256 amount;
     uint256 remainingBalance;
     uint256 lastClaimTime;
+    uint256 startTime;
     uint256 ratePerSecond;
+  }
+  
+  struct RewardDetail {
+    bool isEntity;
+    address sender;
+    address rewardContract;
   }
 }
