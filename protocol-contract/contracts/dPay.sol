@@ -41,6 +41,11 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     _;
   }
 
+  modifier isOwnerStream(address _user) {
+    require(trackReward[_user].isEntity == true, "You are not the owner of stream");
+    _;
+  }
+
   modifier isSender(uint256 _id, address _sender) {
     require(paymentStream[_id].sender == _sender, "You are not the sender");
     _;
@@ -49,6 +54,8 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   // events
   event _Deposit(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
   event _Withdraw(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
+  event _claim(address indexed _fromAddress, uint256 _amount);
+  event _cancle(address indexed _fromAddress, uint256 indexed _id, uint256 _amount);
 
   // constructor
   constructor(
@@ -80,17 +87,20 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   function deposit(
     uint256 _amount,
     address _recipient,
+    uint256 _amountperTimes,
     string memory _times
   ) external nonReentrant {
     // validation
     require(usdc.balanceOf(msg.sender) >= _amount, "insufficient balance");
-    require(_amount >= 1e8, "minimum deposit 100 usdc");
+    require(_amountperTimes >= 1e8, "minimum deposit 100 usdc");
+    require(_amount >=_amountperTimes, "amount should be greater or equal to amount per times");
 
     // logics
     usdc.transferFrom(msg.sender, address(this), _amount);
     _deposit(
       msg.sender,
       _amount,
+      _amountperTimes,
       _recipient,
       _times,
       "Ethereum"
@@ -100,6 +110,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   function _deposit(
     address _sender,
     uint256 _amount,
+    uint256 _amountperTimes,
     address _recipient,
     string memory _times,
     string memory _fromChain
@@ -120,6 +131,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
       trackReward[_sender].isEntity = true;
       trackReward[_sender].sender = _sender;
       trackReward[_sender].rewardContract = address(payReward);
+      trackReward[_sender].lastClaimTime = block.timestamp;
     }
     
     TotalValueLock += _amount;
@@ -134,7 +146,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
       remainingBalance: _amount,
       lastClaimTime: block.timestamp,
       startTime: block.timestamp,
-      ratePerSecond: _amount.div(times[_times])
+      ratePerSecond: _amountperTimes.div(times[_times])
     });
     
     lastId++;
@@ -182,6 +194,36 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     emit _Withdraw(_recipient, _id, _toChain, amount);
 
     return amount;
+  }
+
+  function claim() external isOwnerStream(msg.sender)  nonReentrant {
+    // because of aave v3 usdc market cap has reach 100% on testnet, we need to add more reward by minting usdc 
+    // let say that the additional reward is 0.0000001 usdc per seconds
+    DPayReward payReward = DPayReward(trackReward[msg.sender].rewardContract);
+    uint256 realReward = payReward.getClaimablePrize();
+    uint256 additionalReward = (block.timestamp - trackReward[msg.sender].lastClaimTime);
+    if(realReward.add(additionalReward) > 0) {
+      if(realReward > 0) {
+        payReward.withdraw(realReward);
+      }
+      aaveFaucet.mint(address(usdc), address(this), additionalReward);
+      trackReward[msg.sender].lastClaimTime = block.timestamp;
+      usdc.transfer(msg.sender, realReward.add(additionalReward));
+      emit _claim(msg.sender, realReward.add(additionalReward));
+    } else {
+      revert('you dont have any reward to claim');
+    }
+  }
+
+  function cancle(
+    uint256 _id
+  ) external streamExist(_id) isSender(_id, msg.sender) nonReentrant {
+    DPayReward payReward = DPayReward(trackReward[msg.sender].rewardContract);
+    uint256 lastBalance = paymentStream[_id].remainingBalance;
+    payReward.withdraw(lastBalance);
+    paymentStream[_id].remainingBalance = 0;
+    usdc.transfer(msg.sender, lastBalance);
+    emit _cancle(msg.sender, _id, lastBalance);
   }
 
   // view functions

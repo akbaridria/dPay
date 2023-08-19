@@ -62,6 +62,10 @@ contract DPayReward {
   // read method
   function getClaimablePrize() public view returns (uint256) {
     DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
-    return (aToken.scaledBalanceOf(address(this)).mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
+    uint256 countedTotal = aToken.scaledBalanceOf(address(this)).mul(reserve.liquidityIndex).div(1e27);
+    if(countedTotal >= totalDeposit) {
+      return countedTotal.sub(totalDeposit);
+    } 
+    return 0;
   }
 }

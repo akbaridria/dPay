@@ -17,5 +17,6 @@ library Types {
     bool isEntity;
     address sender;
     address rewardContract;
+    uint256 lastClaimTime;
   }
 }
