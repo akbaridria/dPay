@@ -19,4 +19,25 @@ library Types {
     address rewardContract;
     uint256 lastClaimTime;
   }
+
+  struct ExecuteToken {
+    uint256 amountPerTimes;
+    string times;
+    address recipient;
+    uint256 id;
+    address sender;
+  }
+
+  struct DepositDetail {
+    address _sender;
+    uint256 _amount;
+    uint256 _amountPerTimes;
+    address _recipient;
+    string _times;
+    string _fromChain;
+  }
+
+  struct ExecuteMessage {
+    uint256 _id;
+  }
 }

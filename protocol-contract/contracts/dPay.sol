@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
+import {StringToAddress} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/utils/AddressString.sol";
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -19,6 +20,7 @@ import "./DPayReward.sol";
 contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   // variables
   using SafeMath for uint256;
+  using StringToAddress for string;
 
   IAxelarGasService gasReceiver;
   IERC20 usdc;
@@ -29,6 +31,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
 
   uint256 public TotalValueLock;
   uint256 public lastId = 0;
+  string public axlUSDC = 'aUSDC';
   mapping(uint256 => Types.StreamDetail) public paymentStream;
   mapping(address => uint256[]) public senders;
   mapping(address => uint256[]) public recipients;
@@ -53,9 +56,11 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
 
   // events
   event _Deposit(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
+  event _DepositAgain(address indexed _fromAddress, uint256 indexed _id, string _fromChain, uint256 _amount);
   event _Withdraw(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
   event _claim(address indexed _fromAddress, uint256 _amount);
   event _cancle(address indexed _fromAddress, uint256 indexed _id, uint256 _amount);
+  event _error(string _error);
 
   // constructor
   constructor(
@@ -94,33 +99,33 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     require(usdc.balanceOf(msg.sender) >= _amount, "insufficient balance");
     require(_amountperTimes >= 1e8, "minimum deposit 100 usdc");
     require(_amount >=_amountperTimes, "amount should be greater or equal to amount per times");
+    require(_recipient != msg.sender, "sender and recipient can't be the same");
+    require(_recipient != address(0), "recipient can't be zero address");
+    require(_amount <= 2e8, "maximum deposit is 200 usdc");
 
     // logics
+    Types.DepositDetail memory tps = Types.DepositDetail({
+      _sender: msg.sender,
+      _amount: _amount,
+      _amountPerTimes: _amountperTimes,
+      _recipient: _recipient,
+      _times: _times,
+      _fromChain: "Ethereum"
+    });
+
     usdc.transferFrom(msg.sender, address(this), _amount);
-    _deposit(
-      msg.sender,
-      _amount,
-      _amountperTimes,
-      _recipient,
-      _times,
-      "Ethereum"
-    );
+    _deposit(tps);
   }
 
   function _deposit(
-    address _sender,
-    uint256 _amount,
-    uint256 _amountperTimes,
-    address _recipient,
-    string memory _times,
-    string memory _fromChain
+    Types.DepositDetail memory args
   ) internal {
     
     DPayReward payReward;
 
     // if RewardDetail is exist then set the instance if it is not then create the new one
-    if(trackReward[_sender].isEntity == true) {
-      payReward = DPayReward(trackReward[_sender].rewardContract);
+    if(trackReward[args._sender].isEntity == true) {
+      payReward = DPayReward(trackReward[args._sender].rewardContract);
     } else {
       payReward = new DPayReward(
         address(this),
@@ -128,40 +133,68 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
         address(iPool),
         address(usdc)
       );
-      trackReward[_sender].isEntity = true;
-      trackReward[_sender].sender = _sender;
-      trackReward[_sender].rewardContract = address(payReward);
-      trackReward[_sender].lastClaimTime = block.timestamp;
+      trackReward[args._sender].isEntity = true;
+      trackReward[args._sender].sender = args._sender;
+      trackReward[args._sender].rewardContract = address(payReward);
+      trackReward[args._sender].lastClaimTime = block.timestamp;
     }
     
-    TotalValueLock += _amount;
-    payReward.addTotalDeposit(_amount);
+    TotalValueLock += args._amount;
+    payReward.addTotalDeposit(args._amount);
 
     // set stream detail
     Types.StreamDetail memory stream = Types.StreamDetail({
       isEntity: true,
-      sender: _sender,
-      receiver: _recipient,
-      amount: _amount,
-      remainingBalance: _amount,
+      sender: args._sender,
+      receiver: args._recipient,
+      amount: args._amount,
+      remainingBalance: args._amount,
       lastClaimTime: block.timestamp,
       startTime: block.timestamp,
-      ratePerSecond: _amountperTimes.div(times[_times])
+      ratePerSecond: args._amountPerTimes.div(times[args._times])
     });
     
     lastId++;
     paymentStream[lastId] = stream;
     
     // set streamId for ongoing and ingoing address
-    senders[_sender].push(lastId);
-    recipients[_recipient].push(lastId);
+    senders[args._sender].push(lastId);
+    recipients[args._recipient].push(lastId);
 
-    usdc.approve(address(iPool), _amount);
-    iPool.supply(address(usdc), _amount, trackReward[_sender].rewardContract, 0);
+    usdc.approve(address(iPool), args._amount);
+    iPool.supply(address(usdc), args._amount, trackReward[args._sender].rewardContract, 0);
 
-    emit _Deposit(msg.sender, lastId, _fromChain, _amount);
+    emit _Deposit(msg.sender, lastId, args._fromChain, args._amount);
   }
 
+  function depositAgain(
+    uint256 _id,
+    uint256 _amount
+  ) external streamExist(_id) nonReentrant {
+    require(_amount <= 2e8, "maximum deposit is 200 usdc");
+    
+    _depositAgain(
+      _id,
+      _amount,
+      msg.sender,
+      "Ethereum"
+    );
+  }
+
+  function _depositAgain(
+    uint256 _id,
+    uint256 _amount,
+    address _sender,
+    string memory _fromChain
+  ) internal {
+    require(paymentStream[_id].sender == _sender, "you are not the sender");
+    paymentStream[_id].amount += _amount;
+    paymentStream[_id].remainingBalance += _amount;
+    iPool.supply(address(usdc), _amount, trackReward[_sender].rewardContract,0);
+    emit _DepositAgain(_sender, _id, _fromChain, _amount);
+  }
+
+  // withdraw function
   function withdraw(
     uint256 _id
   ) external streamExist(_id) nonReentrant {
@@ -215,6 +248,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     }
   }
 
+  // cancle function
   function cancle(
     uint256 _id
   ) external streamExist(_id) isSender(_id, msg.sender) nonReentrant {
@@ -224,6 +258,86 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     paymentStream[_id].remainingBalance = 0;
     usdc.transfer(msg.sender, lastBalance);
     emit _cancle(msg.sender, _id, lastBalance);
+  }
+
+  function transfer(
+    address _token,
+    address _sender,
+    uint256 _amount
+  ) internal returns (bool) {
+    IERC20(_token).transfer(_sender, _amount);
+    return true;
+  }
+
+  // cross-chain receiver
+  function _executeWithToken(
+    string calldata sourceChain,
+    string calldata,
+    bytes calldata payload,
+    string calldata tokenSymbol,
+    uint256 amount
+  ) internal override {
+    address tokenAddress = gateway.tokenAddresses(tokenSymbol);
+    Types.ExecuteToken memory args = abi.decode(payload, (Types.ExecuteToken));    
+    if(tokenAddress == address(aUsdc)) {
+      if(args.id > 0) {
+        if(paymentStream[args.id].isEntity == false) {
+          transfer(tokenAddress, args.recipient, amount);
+          emit _error("paymentStream not exist!");
+        } else {
+          _depositAgain(
+            args.id,
+            amount,
+            args.recipient, 
+            sourceChain
+          );
+        }
+      } else {
+        if(amount < 1e8) {
+          transfer(tokenAddress, args.recipient, amount);
+          emit _error("minimum 100 usdc to create stream");
+        } else {
+          if(amount < args.amountPerTimes) {
+            transfer(tokenAddress, args.recipient, amount);
+            emit _error("amount should be larger than amountPerTimes");
+          } else {
+            aaveFaucet.mint(address(usdc), address(this), amount);
+            Types.DepositDetail memory tps = Types.DepositDetail({
+              _sender: args.sender,
+              _amount: amount,
+              _amountPerTimes: args.amountPerTimes,
+              _recipient: args.recipient,
+              _times: args.times,
+              _fromChain: sourceChain
+            });
+
+            _deposit(
+              tps
+            );
+          }
+        }
+      }
+    } else {
+      transfer(tokenAddress, args.recipient, amount);
+      emit _error("token should be (a)usdc only");
+    }
+  }
+
+  function _execute(
+    string calldata sourceChain,
+    string calldata sourceAddress,
+    bytes calldata payload
+  ) internal override {
+    (uint256 _id, address recipient) = abi.decode(payload, (uint256, address));
+
+    if(paymentStream[_id].isEntity == true && paymentStream[_id].receiver == recipient) {
+      uint256 amountWithdraw = _withdraw(_id, recipient, sourceChain);
+      bytes memory _payload = abi.encode(amountWithdraw, recipient);
+      aUsdc.approve(address(gateway), amountWithdraw);
+      gateway.callContractWithToken(sourceChain, sourceAddress, _payload, axlUSDC, amountWithdraw);
+    } else {
+      emit _error("stream not exist or you are not the recipient");
+    }
   }
 
   // view functions
