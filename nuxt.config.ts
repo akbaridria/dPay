@@ -8,4 +8,14 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  components: {
+    dirs: [
+      {
+        path: '~/components/icons', prefix: 'Icons', global: true,
+      },
+      {
+        path: '~/components'
+      }
+    ]
+  }
 })

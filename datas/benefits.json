@@ -1,0 +1,19 @@
+{
+  "benefits": [
+    {
+      "image": "looper-benefit-1.svg",
+      "title": "Flexibility Across Chains",
+      "subtitle": "Our dApp enables DAOs to break free from chain-specific limitations, streamlining salary management across various blockchain networks. No matter the chain, our solution has you covered."
+    },
+    {
+      "image": "looper-benefit-2.svg",
+      "title": "Automated Efficiency",
+      "subtitle": "Say goodbye to manual salary distributions. Our automated system ensures timely and consistent payouts, freeing up your DAO's resources for more impactful endeavors."
+    },
+    {
+      "image": "looper-benefit-3.svg",
+      "title": "Earn While You Pay",
+      "subtitle": "Instead of funds lying idle, our integration with Aave V3 transforms your treasury into a dynamic revenue generator. Your DAO earns rewards from decentralized finance activities, reinforcing financial stability and growth."
+    }
+  ]
+}

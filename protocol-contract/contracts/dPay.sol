@@ -285,6 +285,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
           transfer(tokenAddress, args.recipient, amount);
           emit _error("paymentStream not exist!");
         } else {
+          aaveFaucet.mint(address(usdc), address(this), amount);
           _depositAgain(
             args.id,
             amount,

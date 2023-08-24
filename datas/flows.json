@@ -1,0 +1,19 @@
+{
+  "flows": [
+    {
+      "number": "01",
+      "title": "Input payee information",
+      "description": "Provide details about the recipient's information."
+    },
+    {
+      "number": "02",
+      "title": "Amount & rate",
+      "description": "Input the sum and the total flow rate."
+    },
+    {
+      "number": "03",
+      "title": "Start Streaming!",
+      "description": "Initiate the streaming process!"
+    }
+  ]
+}

@@ -9,8 +9,22 @@ module.exports = {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        cblue: {
+          100: '#5B45FF'
+        },
+        cblack: {
+          100: '#111',
+          200: '#1F1F1F',
+          300: '#131313'
+        },
+        cwhite: {
+          100: '#F3F3F3'
+        }
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }
 

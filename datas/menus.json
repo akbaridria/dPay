@@ -1,0 +1,24 @@
+{
+  "menus": [
+    {
+      "name": "Home",
+      "link": "/",
+      "icon": "IconsHome"
+    },
+    {
+      "name": "Stream",
+      "link": "/stream",
+      "icon": "IconsStream"
+    },
+    {
+      "name": "Reward",
+      "link": "/reward",
+      "icon": "IconsReward"
+    },
+    {
+      "name": "Docs",
+      "link": "/docs",
+      "icon": "IconsDocs"
+    }
+  ]
+}
