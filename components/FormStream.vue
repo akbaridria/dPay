@@ -51,9 +51,16 @@
               class="input input-bordered w-full text-[14px]" />
           </div>
         </div>
-        <button class="w-full btn bg-cblue-100 rounded-xl text-white hover:bg-cblue-100 hover:brightness-75">Send
+        <div class="alert alert-info text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Because of lack liquidity the maximum amount to deposit is <span class="font-semibold">200 (a)Usdc per-transaction</span> and the minimum is <span class="font-semibold">100 (a)Usdc per-transaction</span></span>
+        </div>
+        <button
+          class="w-full px-[1.25rem] py-[1.25rem] bg-cblack-100 rounded-xl text-white hover:brightness-50 transition-all">Send
           Stream</button>
       </div>
-    </div>
   </div>
-</template>
+</div></template>
