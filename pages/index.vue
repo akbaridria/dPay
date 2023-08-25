@@ -23,7 +23,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
   <div>
     <section class="relative bg-black h-screen max-h-[900px]">
       <img class="absolute top-0 right-0 h-full" src="images/looper-3.svg" alt="">
-      <div class="relative max-2-[1030px] mx-auto h-full">
+      <div class="relative max-w-[1030px] mx-auto h-full">
         <div class="flex items-center justify-center text-white h-full">
           <div class="text-center text-[40px] sm:text-[3.75rem] font-medium">
             <div>Effortlessly cross-chain stream</div>
@@ -48,11 +48,11 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
           </div>
           <div class="grid lg:grid-cols-3 gap-[1rem]">
             <div v-for="(item, index) in benefit" :key="index" class="relative h-[400px] p-3 rounded-lg bg-white">
-              <div class="flex flex-col gap-2 h-full justify-end">
+              <div class="flex flex-col gap-2 h-full justify-end relative z-[2]">
                 <div class="text-[1.5rem] font-semibold">{{ item.title }}</div>
                 <div class="h-[105px] text-[1rem] text-black/50">{{ item.subtitle }}</div>
               </div>
-              <img :src="`images/${item.image}`" class="absolute top-0 left-0 w-full h-full" alt="">
+              <img :src="`images/${item.image}`" class="absolute top-0 left-0 w-full h-full z-[1]" alt="">
             </div>
           </div>
         </div>

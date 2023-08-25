@@ -5,24 +5,24 @@
   <svg width="328" height="386" viewBox="0 0 328 386" fill="none" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink">
     <rect y="108" width="130" height="130" rx="25" fill="#EEEEEE" />
-    <rect x="7.91211" y="115.911" width="115" height="115" fill="url(#pattern0)" />
+    <rect x="7.91211" y="115.911" width="115" height="115" fill="url(#pattern00)" />
     <rect x="56.6602" y="277" width="130" height="130" rx="25" fill="#3396FF" />
-    <rect x="72.8164" y="293.335" width="104.971" height="97.3455" rx="48.6728" fill="url(#pattern1)" />
+    <rect x="72.8164" y="293.335" width="104.971" height="97.3455" rx="48.6728" fill="url(#pattern11)" />
     <rect x="145.66" y="-22.3411" width="130" height="130" rx="25" fill="#0052FE" />
-    <rect x="175.215" y="6.89209" width="71.1801" height="71.4754" rx="35.5901" fill="url(#pattern2)" />
+    <rect x="175.215" y="6.89209" width="71.1801" height="71.4754" rx="35.5901" fill="url(#pattern22)" />
     <rect x="197.658" y="157.659" width="130" height="130" rx="25" fill="#12FF80" />
-    <rect x="209.443" y="169.444" width="108" height="108" fill="url(#pattern3)" />
+    <rect x="209.443" y="169.444" width="108" height="108" fill="url(#pattern33)" />
     <defs>
-      <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+      <pattern id="pattern00" patternContentUnits="objectBoundingBox" width="1" height="1">
         <use xlink:href="#image0_0_1" transform="scale(0.00125)" />
       </pattern>
-      <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
+      <pattern id="pattern11" patternContentUnits="objectBoundingBox" width="1" height="1">
         <use xlink:href="#image1_0_1" transform="matrix(0.000438817 0 0 0.000473191 -0.0620632 -0.100069)" />
       </pattern>
-      <pattern id="pattern2" patternContentUnits="objectBoundingBox" width="1" height="1">
+      <pattern id="pattern22" patternContentUnits="objectBoundingBox" width="1" height="1">
         <use xlink:href="#image2_0_1" transform="matrix(0.00307455 0 0 0.00306185 -0.288167 -0.280994)" />
       </pattern>
-      <pattern id="pattern3" patternContentUnits="objectBoundingBox" width="1" height="1">
+      <pattern id="pattern33" patternContentUnits="objectBoundingBox" width="1" height="1">
         <use xlink:href="#image3_0_1" transform="scale(0.000378788)" />
       </pattern>
       <image id="image0_0_1" width="800" height="800"

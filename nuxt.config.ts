@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  modules: [
+    '@pinia/nuxt',
+  ],
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {
@@ -12,6 +15,9 @@ export default defineNuxtConfig({
     dirs: [
       {
         path: '~/components/icons', prefix: 'Icons', global: true,
+      },
+      {
+        path: '~/components/logos', prefix: 'Logos', global: true
       },
       {
         path: '~/components'

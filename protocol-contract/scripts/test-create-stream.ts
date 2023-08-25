@@ -31,7 +31,7 @@ async function main() {
     chain.fee,
     "ethereum-2",
     chain.symbol,
-    1000000,
+    1300000,
     2
   );
   // approve ausdc
