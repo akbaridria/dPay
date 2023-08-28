@@ -9,4 +9,15 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
   }
+  select {
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Safari, Chrome, Opera */
+    -webkit-appearance: none;
+  }
+
+  /* for IE10 */
+  select::-ms-expand {
+    display: none;
+  }
 }

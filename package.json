@@ -15,8 +15,10 @@
     "@types/node": "^18.17.3",
     "daisyui": "^3.6.1",
     "ethers": "^6.7.1",
+    "minidenticons": "^4.2.0",
     "nuxt": "^3.6.5",
-    "pinia": "^2.1.6"
+    "pinia": "^2.1.6",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "autoprefixer": "^10.4.15",

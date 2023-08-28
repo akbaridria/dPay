@@ -20,6 +20,9 @@ export default defineNuxtConfig({
         path: '~/components/logos', prefix: 'Logos', global: true
       },
       {
+        path: '~/components/Modals', prefix: 'Modals', global: true
+      },
+      {
         path: '~/components'
       }
     ]

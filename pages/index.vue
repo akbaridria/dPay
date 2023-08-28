@@ -42,7 +42,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
             </div>
             <div class="col-span-2 text-[1.2rem] text-cblack-300">
               Dpay represents a cross-chain protocol enabling the automation and real-time streaming of transactions.
-              Beneficiaries have the flexibility to withdraw these funds whenever desired, eliminating the necessity for
+              Beneficiaries have the flexibility to withdraw these funds whenever and whatever chain they desired, eliminating the necessity for
               manual repetitive payment processes.
             </div>
           </div>
@@ -78,7 +78,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
         <div class="relative grid md:grid-cols-2 bg-black rounded-xl p-[3.75rem]">
           <div class="grid gap-3 text-white">
             <div class="text-[2rem] font-medium">Stream seamless recurring crypto payments!</div>
-            <div class="text-[1rem] text-white/50">Automate salaries by streaming them - soemployees can withdraw whenever they want.</div>
+            <div class="text-[1rem] text-white/50">Automate salaries by streaming them - so employees can withdraw whenever and whatever chain they want.</div>
             <a href="#" class="my-[1rem] bg-cblack-200 px-[2rem] py-[1rem] rounded-lg w-fit">Stream now</a>
           </div>
           <IconsBanner class="absolute top-0 right-0 h-full hidden md:block" />
