@@ -10,14 +10,14 @@ export const calculate = async (chainId: number) => {
     "ethereum-2",
     chain.symbol,
     1000000,
-    1.5
+    2
   );
   const feeBack = await api.estimateGasFee(
     "ethereum-2",
     chain.fee,
     chain.symbol,
     1000000,
-    1.5
+    2
   )
   const d :BigInt = BigInt(gasFee as string) + BigInt(feeBack as string)
   return d.toString()

@@ -55,7 +55,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   }
 
   // events
-  event _Deposit(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
+  event _Deposit(address indexed _fromAddress, address indexed _recipient, uint256 indexed _lastId, string _fromChain, uint256 _amount);
   event _DepositAgain(address indexed _fromAddress, uint256 indexed _id, string _fromChain, uint256 _amount);
   event _Withdraw(address indexed _fromAddress, uint256 indexed _lastId, string _fromChain, uint256 _amount);
   event _claim(address indexed _fromAddress, uint256 _amount);
@@ -164,7 +164,7 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     usdc.approve(address(iPool), args._amount);
     iPool.supply(address(usdc), args._amount, trackReward[args._sender].rewardContract, 0);
 
-    emit _Deposit(msg.sender, lastId, args._fromChain, args._amount);
+    emit _Deposit(args._sender, args._recipient, lastId, args._fromChain, args._amount);
   }
 
   function depositAgain(
@@ -190,6 +190,8 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     require(paymentStream[_id].sender == _sender, "you are not the sender");
     paymentStream[_id].amount += _amount;
     paymentStream[_id].remainingBalance += _amount;
+
+    usdc.approve(address(iPool), _amount);
     iPool.supply(address(usdc), _amount, trackReward[_sender].rewardContract,0);
     emit _DepositAgain(_sender, _id, _fromChain, _amount);
   }
