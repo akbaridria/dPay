@@ -1,7 +1,7 @@
 [
   {
     "name": "Moonbeam",
-    "chainNa": "moonbeam",
+    "chainName": "moonbeam",
     "chainId": 1287,
     "rpc": "https://rpc.api.moonbase.moonbeam.network",
     "gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
