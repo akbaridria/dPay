@@ -13,18 +13,21 @@ async function main() {
    chain.gateway,
    chain.gasReceiver,
    chain.axlToken,
-   ethereumChain.contractAddress
+   ethereumChain.contractAddress,
+   {
+    gasLimit: 2500000
+   }
   );
   
   console.log("depoloying dpay contract..")
-  await dpayconnector.deployed()
-  chain.contractAddress = dpayconnector.address
-  console.log("dpay contract has been deployed : ", dpayconnector.address)
+  await dpayconnector.waitForDeployment()
+  chain.contractAddress = dpayconnector.target as string
+  console.log("dpay contract has been deployed : ", dpayconnector.target)
   
   try {
     // verify contracts on etherscan
     await run(`verify:verify`, {
-      address: dpayconnector.address,
+      address: dpayconnector.target,
       constructorArguments: [
         chain.gateway,
         chain.gasReceiver,

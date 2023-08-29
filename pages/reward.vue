@@ -6,6 +6,10 @@ import { useConnectWallet } from '../stores/auth'
 import faqs from '../datas/faq.json'
 import { ethers } from 'ethers';
 
+useHead({
+  title: 'dPay | Reward'
+})
+
 // interfaces
 import { FormReward } from '../interfaces/globalInterfaces'
 
@@ -81,7 +85,7 @@ onMounted(async () => {
       </div>
     </div>
     <div class="relative bg-black grid gap-[2rem]">
-      <img class="absolute top-0 right-0 h-full" src="images/looper-3.svg" alt="">
+      <img class="absolute top-0 right-0 h-full" src="/images/looper-33.svg" alt="">
       <div class="max-w-[1030px] mx-auto">
         <div class="px-4 py-[7rem] text-white text-center flex flex-col gap-[1rem] items-center justify-center">
           <div class="text-[2rem]">

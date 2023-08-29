@@ -1,7 +1,8 @@
 export interface Menus {
   name: string,
   link: string,
-  icon: string
+  icon: string,
+  newTab: boolean
 }
 
 export interface Benefits {

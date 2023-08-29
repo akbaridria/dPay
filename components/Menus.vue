@@ -25,6 +25,7 @@ const router = useRoute();
           <div class="flex sm:grid gap-2 p-2 bg-cblack-100 rounded-lg text-white">
             <NuxtLink 
               v-for="(item, index) in menus" 
+              :target="item.newTab ? '_blank' : ''"
               class="group flex gap-2 p-4 hover:bg-cblack-200 hover:rounded-lg transition-all"
               :class="{'bg-cblack-200 rounded-lg': router.path === item.link}"
               :to="item.link" 

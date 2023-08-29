@@ -3,22 +3,26 @@
     {
       "name": "Home",
       "link": "/",
-      "icon": "IconsHome"
+      "icon": "IconsHome",
+      "newTab": false
     },
     {
       "name": "Stream",
       "link": "/stream",
-      "icon": "IconsStream"
+      "icon": "IconsStream",
+      "newTab": false
     },
     {
       "name": "Reward",
       "link": "/reward",
-      "icon": "IconsReward"
+      "icon": "IconsReward",
+      "newTab": false
     },
     {
       "name": "Docs",
-      "link": "/docs",
-      "icon": "IconsDocs"
+      "link": "https://github.com/akbaridria/dPay",
+      "icon": "IconsDocs",
+      "newTab": true
     }
   ]
 }

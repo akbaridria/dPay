@@ -5,6 +5,10 @@ import { useConnectWallet } from '../stores/auth'
 import datas from '../protocol-contract/datas/chains.json'
 import { ListSender } from '../interfaces/globalInterfaces';
 
+useHead({
+  title: 'dPay | Stream'
+})
+
 // interfaces
 
 // data and props

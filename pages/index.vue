@@ -4,6 +4,9 @@ import { reactive } from 'vue';
 import benefits from '../datas/benefits.json';
 import flows from '../datas/flows.json';
 
+useHead({
+  title: 'dPay | Home'
+})
 // interfaces
 import { Benefits, StreamingFlow } from '../interfaces/globalInterfaces';
 
@@ -22,7 +25,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
 <template>
   <div>
     <section class="relative bg-black h-screen max-h-[900px]">
-      <img class="absolute top-0 right-0 h-full" src="images/looper-3.svg" alt="">
+      <img class="absolute top-0 right-0 h-full" src="/images/looper-33.svg" alt="">
       <div class="relative max-w-[1030px] mx-auto h-full">
         <div class="flex items-center justify-center text-white h-full">
           <div class="text-center text-[40px] sm:text-[3.75rem] font-medium">
@@ -70,7 +73,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
             </div>
           </div>
         </div>
-        <img class="absolute top-0 left-0 w-full h-full" src="images/looper-benefit-1.svg" alt="">
+        <img class="absolute top-0 left-0 w-full h-full" src="/images/looper-benefit-1.svg" alt="">
       </div>
     </section>        
     <section class="h-fit py-[6rem] lg:max-h-[900px] bg-cwhite-100 grid items-center">
