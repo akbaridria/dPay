@@ -14,7 +14,7 @@ const useWallet = useConnectWallet()
 const balance = ref<BigInt>(0n)
 const amount = ref<number | null>(null)
 const errors = ref<string[]>([])
-
+const loading = ref<boolean>(false)
 const props =defineProps<props>()
 
 const emit = defineEmits<{
@@ -25,6 +25,7 @@ const emit = defineEmits<{
 
 // methods
 const getUsdcBalance = async () => {
+  loading.value = true
   const chain = datas.filter((item) => item.chainId === useWallet.chainId);
   if (chain.length > 0) {
     const contractAddress =
@@ -36,6 +37,7 @@ const getUsdcBalance = async () => {
   } else {
     balance.value = 0n;
   }
+  loading.value = false
 };
 
 const handleSubmit = () => {
@@ -97,7 +99,13 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <button class="btn no-animation w-full" @click.prevent="handleSubmit">Add more fund</button>
+      <button 
+        class="btn no-animation w-full" 
+        :class="{'btn-disabled': loading}"
+        @click.prevent="handleSubmit"
+      >
+        Add more fund
+      </button>
     </form>
   </dialog>
 </template>

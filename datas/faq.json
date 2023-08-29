@@ -1,0 +1,28 @@
+{
+  "faq": [
+    {
+      "question": "What is this dApp all about?",
+      "answer": "Our dApp is a revolutionary tool designed to empower Decentralized Autonomous Organizations (DAOs) by offering cross-chain salary streaming and automated fund management. It enables DAOs to effortlessly create, manage, and withdraw salary streams from various blockchain networks while optimizing funds through integration with Aave V3."
+    },
+    {
+      "question": "How does cross-chain salary streaming work?",
+      "answer": "Cross-chain salary streaming allows DAOs to create and manage salary streams across different blockchain networks. This means you can initiate and withdraw salary streams on any compatible chain, providing unparalleled flexibility and convenience."
+    },
+    {
+      "question": "How do I get started with the dApp?",
+      "answer": "Getting started is easy! Simply connect your DAO wallet to the dApp, select the desired blockchain network, and follow the intuitive instructions to create and manage your salary streams. Our user-friendly interface ensures a smooth experience for all users."
+    },
+    {
+      "question": "What does the term \"reward\" refer to in this context?",
+      "answer": "The term \"reward\" pertains to the additional value your DAO can earn by utilizing our platform's integration with Aave V3. When your DAO's funds are not actively engaged in salary streaming, they can be strategically invested in Aave V3's lending and borrowing protocols. As a result, your DAO earns interest and yields from these activities, contributing to the overall growth of your treasury."
+    },
+    {
+      "question": "Where does the yield come from?",
+      "answer": "The yield your DAO earns comes from Aave V3's decentralized finance (DeFi) lending and borrowing markets. Aave V3 operates as a decentralized protocol that allows users to lend and borrow various cryptocurrencies. Your DAO's funds, when allocated to Aave V3, are utilized by other participants in the DeFi ecosystem. The interest paid by borrowers and the fees from the protocol's operations generate yields, which are then distributed to your DAO as rewards. This mechanism allows your DAO to passively generate earnings from the dynamic and active DeFi landscape, maximizing the potential of your treasury."
+    },
+    {
+      "question": "Are all features within this dApp cross-chain?",
+      "answer": "No, not all features are cross-chain. While creating streams and withdrawing are cross-chain compatible, canceling streams and claiming rewards are currently only supported on the Goerli/Ethereum network"
+    }
+  ]
+}

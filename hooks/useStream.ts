@@ -49,6 +49,17 @@ export const depositAgainETH = async (contractAddress: string, id: number, amoun
   return ''
 }
 
+export const cancleStream = async (contractAddress: string, id: number) : Promise<string> => {
+  if(window.ethereum) {
+    const provider = new ethers.BrowserProvider((window as any).ethereum)
+    const dPay = DPay__factory.connect(contractAddress, await provider.getSigner())
+    const tx = await dPay.cancle(id);
+    await delay(2000)
+    return tx.hash
+  }
+  return ''
+}
+
 export const getListSenders = async (contractAddress: string, userWallet: string)  => {
   if(window.ethereum) {
     const provider = new ethers.JsonRpcProvider(jsonRpc)
@@ -59,17 +70,19 @@ export const getListSenders = async (contractAddress: string, userWallet: string
 
     for(let event of events) {
       const e = await dPay.paymentStream(Number(event.args[2]))
-      const temp :ListSender = {
-        id: Number(event.args[2]),
-        sender: e.sender,
-        recipient: e.receiver,
-        amount: Number(ethers.formatUnits(e.amount, 6)),
-        remainingBalance: Number(ethers.formatUnits(e.remainingBalance, 6)),
-        ratePerSecond: Number(ethers.formatUnits(e.ratePerSecond, 6)),
-        starttime: Number(e.startTime),
-        availabeAmount: ((Math.round(+new Date()/1000) - Number(e.startTime))*Number(ethers.formatUnits(e.ratePerSecond, 6))).toFixed(6)
+      if(Number(ethers.formatUnits(e.remainingBalance, 6)) > 0) {
+        const temp :ListSender = {
+          id: Number(event.args[2]),
+          sender: e.sender,
+          recipient: e.receiver,
+          amount: Number(ethers.formatUnits(e.amount, 6)),
+          remainingBalance: Number(ethers.formatUnits(e.remainingBalance, 6)),
+          ratePerSecond: Number(ethers.formatUnits(e.ratePerSecond, 6)),
+          starttime: Number(e.lastClaimTime),
+          availabeAmount: ((Math.round(+new Date()/1000) - Number(e.lastClaimTime))*Number(ethers.formatUnits(e.ratePerSecond, 6))).toFixed(6)
+        }
+        listSenders = [...listSenders, temp]
       }
-      listSenders = [...listSenders, temp]
     }
     return listSenders
   }
@@ -86,19 +99,32 @@ export const getListReceiver = async (contractAddress: string, userWallet: strin
     
     for(let event of events) {
       const e = await dPay.paymentStream(Number(event.args[2]))
-      const temp :ListSender = {
-        id: Number(event.args[2]),
-        sender: e.sender,
-        recipient: e.receiver,
-        amount: Number(ethers.formatUnits(e.amount, 6)),
-        remainingBalance: Number(ethers.formatUnits(e.remainingBalance, 6)),
-        ratePerSecond: Number(ethers.formatUnits(e.ratePerSecond, 6)),
-        starttime: Number(e.startTime),
-        availabeAmount: ((Math.round(+new Date()/1000) - Number(e.startTime))*Number(ethers.formatUnits(e.ratePerSecond, 6))).toFixed(6)
+      if(Number(ethers.formatUnits(e.remainingBalance, 6)) > 0) {
+        const temp :ListSender = {
+          id: Number(event.args[2]),
+          sender: e.sender,
+          recipient: e.receiver,
+          amount: Number(ethers.formatUnits(e.amount, 6)),
+          remainingBalance: Number(ethers.formatUnits(e.remainingBalance, 6)),
+          ratePerSecond: Number(ethers.formatUnits(e.ratePerSecond, 6)),
+          starttime: Number(e.lastClaimTime),
+          availabeAmount: ((Math.round(+new Date()/1000) - Number(e.lastClaimTime))*Number(ethers.formatUnits(e.ratePerSecond, 6))).toFixed(6)
+        }
+        listSenders = [...listSenders, temp]
       }
-      listSenders = [...listSenders, temp]
     }
     return listSenders
   }
   return []
+}
+
+export const withdraw = async (contractAddress: string, id: number) : Promise<string> => {
+  if(window.ethereum) {
+    const provider = new ethers.BrowserProvider((window as any).ethereum)
+    const dPay = DPay__factory.connect(contractAddress, await provider.getSigner())
+    const tx = await dPay.withdraw(id)
+    await delay(2000)
+    return tx.hash
+  }
+  return ''
 }

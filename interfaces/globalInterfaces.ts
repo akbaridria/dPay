@@ -57,3 +57,21 @@ export interface FormStreamMore {
   recipient: string,
   remainingBalance: number
 }
+
+export interface FormCancle {
+  id: number,
+  recipient: string,
+  remainingBalance: number,
+  totalDeposit: number
+}
+
+export interface FormWithdraw {
+  id: number,
+  totalAmount: string,
+}
+
+export interface FormReward {
+  isEntity: boolean,
+  reward: number,
+  lastClaimTime: number
+}

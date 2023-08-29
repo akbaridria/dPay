@@ -3,7 +3,7 @@
 import { trimWallet } from '../utils/helper'
 
 // interfaces
-import { FormStreamMore, ListSender } from '../interfaces/globalInterfaces';
+import { FormStreamMore, FormCancle, ListSender, FormWithdraw } from '../interfaces/globalInterfaces';
 
 interface Props {
   data: ListSender[],
@@ -19,6 +19,8 @@ const openModalInput = ref<boolean>(false)
 const activeId = ref<number>(0)
 const openModalFund = ref<boolean>(false)
 const isOpenModalTransaction = ref<boolean>(false)
+const openModalCancle = ref<boolean>(false)
+const openModalWithdraw = ref<boolean>(false)
 const txHash = ref<string>('')
 const formAddFund = reactive<FormStreamMore>({
   id: 0,
@@ -26,6 +28,17 @@ const formAddFund = reactive<FormStreamMore>({
   recipient: '',
   remainingBalance: 0
 })
+const formCancle = reactive<FormCancle>({
+  id: 0,
+  recipient: '',
+  remainingBalance: 0,
+  totalDeposit: 0
+})
+const formWithdraw = reactive<FormWithdraw>({
+  id: 0,
+  totalAmount: '0'
+})
+
 defineEmits<{
   changeTab: [value: string]
 }>()
@@ -54,7 +67,6 @@ const handleAddAgain = (id: number, amount: number) => {
     formAddFund.recipient = detailStream[0].recipient
     formAddFund.remainingBalance = detailStream[0].remainingBalance
     openModalFund.value = true
-    console.log('here')
   }
   
 }
@@ -108,7 +120,10 @@ onMounted(() => {
                 <td>
                   <div v-if="props.activeTab !== 'Incoming'" class="flex gap-2">
                     <button class="btn no-animation btn-primary text-xs" @click="(openModalInput = true, activeId = item.id)">Add fund</button>
-                    <button class="btn no-animation text-xs">Cancle</button>
+                    <button class="btn no-animation text-xs" @click="(openModalCancle = true, formCancle.id = item.id, formCancle.recipient = item.recipient, formCancle.remainingBalance = item.remainingBalance, formCancle.totalDeposit = item.amount)">Cancle</button>
+                  </div>
+                  <div v-else class="flex gap-2">
+                    <button class="btn no-animation btn-primary text-xs" @click="(openModalWithdraw = true, formWithdraw.id = item.id, formWithdraw.totalAmount = item.availabeAmount)">Withdraw</button>
                   </div>
                 </td>
               </tr>
@@ -143,10 +158,26 @@ onMounted(() => {
       @close-modal="openModalFund = false"
       @open-modal-success="openModalTransaction"
     />
+    <ModalsCancle 
+      v-if="openModalCancle"
+      :id="formCancle.id"
+      :recipient="formCancle.recipient"
+      :remaining-balance="formCancle.remainingBalance"
+      :total-deposit="formCancle.totalDeposit"
+      @close-modal="openModalCancle = false"
+      @open-modal-success="openModalTransaction"
+    />
     <ModalsTransaction 
       v-if="isOpenModalTransaction" 
       :link-tx="txHash" 
       @close-modal="isOpenModalTransaction = false"
+    />
+    <ModalsWithdraw 
+      v-if="openModalWithdraw"
+      :id="formWithdraw.id"
+      :total-amount="formWithdraw.totalAmount"
+      @close-modal="openModalWithdraw = false"
+      @submit="openModalTransaction"
     />
     <!-- end modal  -->
   </div>

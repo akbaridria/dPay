@@ -52,3 +52,16 @@ export const depositAgainETHCross = async (contractAddress: string, id: number, 
   }
   return ''
 }
+
+export const withdrawCross = async (contractAddress: string, id: number, gasFee: bigint) : Promise<string> => {
+  if(window.ethereum) {
+    const provider = new ethers.BrowserProvider((window as any).ethereum)
+    const dPay = DPayConnector__factory.connect(contractAddress, await provider.getSigner())
+    const tx = await dPay.withdraw(id,{
+      value: gasFee
+    })
+    await delay(2000)
+    return tx.hash
+  }
+  return ''
+}

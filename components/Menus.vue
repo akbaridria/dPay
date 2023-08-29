@@ -20,14 +20,14 @@ const router = useRoute();
 <template>
   <div class="relative container mx-auto">
     <div class="relative z-10">
-      <div class="absolute top-[calc(100vh/2-130px)] left-0">
-        <div class="fixed">
-          <div class="grid gap-2 p-2 bg-cblack-100 rounded-lg text-white">
-            <a 
+      <div class=" absolute sm:absolute sm:top-[calc(100vh/2-130px)] sm:left-0">
+        <div class="fixed max-sm:bottom-0">
+          <div class="flex sm:grid gap-2 p-2 bg-cblack-100 rounded-lg text-white">
+            <NuxtLink 
               v-for="(item, index) in menus" 
               class="group flex gap-2 p-4 hover:bg-cblack-200 hover:rounded-lg transition-all"
               :class="{'bg-cblack-200 rounded-lg': router.path === item.link}"
-              :href="item.link" 
+              :to="item.link" 
               :key="index"
             >
               <component 
@@ -42,9 +42,9 @@ const router = useRoute();
               >
                 {{ item.name }}
               </div>
-            </a>
+            </NuxtLink>
             <div 
-              class="group bg-cblack-100 p-2 rounded-full ring-4 ring-black absolute top-[calc(50%-1.5rem)] right-[-1.5rem] cursor-pointer"
+              class="group hidden sm:block bg-cblack-100 p-2 rounded-full ring-4 ring-black absolute top-[calc(50%-1.5rem)] right-[-1.5rem] cursor-pointer"
               @click="isExpand = !isExpand"
             >
               <IconsChevron 

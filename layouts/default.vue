@@ -57,6 +57,7 @@ const switchWallet = async (detailChain:DetailChain) => {
 // lifecycle
 onMounted(async () => {
   if (window.ethereum) {
+    init()
     window.ethereum.on('chainChanged', (e: any) => {
       useConnect.$patch({ chainId: Number(BigInt(e)) })
     })

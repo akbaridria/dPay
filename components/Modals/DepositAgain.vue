@@ -90,6 +90,7 @@ const approveTx = async () => {
       approved.value = await isApproved()
     }
     loading.approve = false
+    await getCrossChainFee()
   } catch (error) {
     console.log(error);
     loading.approve = false
@@ -118,12 +119,7 @@ const deposit = async () => {
   }
 }
 
-// lifecycle
-onMounted(async () => {
-  loading.approve = true
-  approved.value =  await isApproved();
-  loading.approve = false
-
+const getCrossChainFee = async () => {
   loading.crossFee = true
   if(useWallet.chainId === 5) {
     crossFee.value = '0'
@@ -131,8 +127,17 @@ onMounted(async () => {
     const d = await calculate(useWallet.chainId)
     crossFee.value = ethers.formatEther(BigInt(d as string))
   }
-  
   loading.crossFee = false
+}
+
+// lifecycle
+onMounted(async () => {
+  loading.approve = true
+  approved.value =  await isApproved();
+  loading.approve = false
+  if(approved.value) {
+    await getCrossChainFee()
+  }
 })
 
 </script>
@@ -206,10 +211,10 @@ onMounted(async () => {
         </button>
         <button 
           class="btn btn-primary no-animation"
-          :class="{'btn-disabled': !approved || loading.tx}"
+          :class="{'btn-disabled': !approved || loading.tx || loading.crossFee}"
           @click="deposit"
         >
-          Confirm <span v-if="loading.tx" class="loading loading-spinner loading-xs"></span>
+          Confirm <span v-if="loading.tx || loading.crossFee" class="loading loading-spinner loading-xs"></span>
         </button>
       </div>
     </form>
