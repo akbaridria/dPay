@@ -173,6 +173,8 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
   ) external streamExist(_id) nonReentrant {
     require(_amount <= 2e8, "maximum deposit is 200 usdc");
     
+    usdc.transferFrom(msg.sender, address(this), _amount);
+    
     _depositAgain(
       _id,
       _amount,
@@ -190,6 +192,10 @@ contract DPay is AxelarExecutable, ReentrancyGuard, Ownable {
     require(paymentStream[_id].sender == _sender, "you are not the sender");
     paymentStream[_id].amount += _amount;
     paymentStream[_id].remainingBalance += _amount;
+
+    DPayReward payReward = DPayReward(trackReward[_sender].rewardContract);
+    TotalValueLock += _amount;
+    payReward.addTotalDeposit(_amount);
 
     usdc.approve(address(iPool), _amount);
     iPool.supply(address(usdc), _amount, trackReward[_sender].rewardContract,0);
