@@ -1,63 +1,68 @@
-# Nuxt 3 Minimal Starter
+# dPay (Cross-Chain Salary Streaming dApp)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Project Description
 
-## Setup
+Welcome to the Cross-Chain Salary Streaming dApp! This decentralized application empowers Decentralized Autonomous Organizations (DAOs) to streamline salary distributions across multiple blockchain networks while optimizing their funds through integration with Aave V3. Seamlessly create, manage, and withdraw salary streams while earning rewards on idle funds.
 
-Make sure to install the dependencies:
+## Project Website
 
-```bash
-# npm
-npm install
+Visit our <a href="https://dpay-b64a6.web.app/" target="_blank" rel="noopener noreferrer">website</a> to learn more and access the dApp.
 
-# pnpm
-pnpm install
+## Underlying Technology
 
-# yarn
-yarn install
-```
+The Cross-Chain Salary Streaming dApp is built using cutting-edge technologies to ensure a seamless and secure experience:
 
-## Development Server
+- **Axelar GMP:** We leverage the power of the Axelar Global Money Protocol to facilitate cross-chain communication, enabling the dApp to operate smoothly across different blockchain networks.
 
-Start the development server on `http://localhost:3000`:
+- **GetBlock:** Our dApp interfaces with the GetBlock infrastructure, allowing for reliable and easy access to blockchain data. This ensures accurate and real-time information for all transactions and activities.
 
-```bash
-# npm
-npm run dev
+## Yield Source
 
-# pnpm
-pnpm run dev
+The yield generated for your DAO comes from the integration with Aave V3. By lending idle funds on Aave's decentralized lending and borrowing markets, your DAO earns interest and rewards, optimizing the use of treasury funds.
 
-# yarn
-yarn dev
-```
+## dPay Flow
 
-## Production
+![dPay-flow_page-0001](https://github.com/akbaridria/dPay/assets/26589426/5b2cb464-2306-4fc0-b1b5-cddc766d69c7)
 
-Build the application for production:
+The image above illustrates the streamlined process of salary streaming and yield optimization through the Cross-Chain Salary Streaming dApp.
 
-```bash
-# npm
-npm run build
+## Supported Networks and Contract Addresses
 
-# pnpm
-pnpm run build
+- Goerli:
+  - dPay Hub: 0x152Ac1d6d009064fC0Fb36A98051051484830C4a
 
-# yarn
-yarn build
-```
+- Moonbase:
+  - dPay Connector: 0x63Bc42284A1d2C7A81b91525f3d053F2ab85D13a
 
-Locally preview production build:
+- Polygon Mumbai:
+  - dPay Connector: 0x6747d0033db497157e6F354D1C046fEe1B4e4300
 
-```bash
-# npm
-npm run preview
+- Avalanche Fuji:
+  - dPay Connector: 0x7a63f9dBF5F39fbB3d35F44B8D85A1EDC9cACcDE
 
-# pnpm
-pnpm run preview
+- BSC Testnet:
+  - dPay Connector: 0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a
+ 
+- Fantom Testnet:
+  - dPay Connector: 0xC55B8492030D92af59C8595810BcD152224F5091
+ 
+- Aurora Testnet:
+  - dPay Connector: 0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6
+ 
+- Celo Testnet:
+  - dPay Connector: 0xECf71718B5fEF085cC29F87045b03411c6E1707C
+ 
+- Arbitrum Testnet:
+  - dPay Connector: 0x890c39A5335A009af6d20048770eF6DE1437b0AF
 
-# yarn
-yarn preview
-```
+- Optimism Testnet:
+  - dPay Connector: 0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a
+ 
+- Base Testnet:
+  - dPay Connector: 0x2162c9bf1ED42b1d0C5Af4f96B0E4b78c93DBa41
+ 
+- Linea Testnet:
+  - dPay Connector: 0x2162c9bf1ED42b1d0C5Af4f96B0E4b78c93DBa41
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
+By utilizing the Cross-Chain Salary Streaming dApp, your DAO can redefine salary distribution, treasury optimization, and earn rewards while contributing to the world of decentralized finance.
