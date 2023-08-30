@@ -82,7 +82,7 @@ const streamflow = reactive<StreamingFlow[]>(flows.flows);
           <div class="grid gap-3 text-white">
             <div class="text-[2rem] font-medium">Stream seamless recurring crypto payments!</div>
             <div class="text-[1rem] text-white/50">Automate salaries by streaming them - so employees can withdraw whenever and whatever chain they want.</div>
-            <a href="#" class="my-[1rem] bg-cblack-200 px-[2rem] py-[1rem] rounded-lg w-fit">Stream now</a>
+            <NuxtLink to="/stream" class="my-[1rem] bg-cblack-200 px-[2rem] py-[1rem] rounded-lg w-fit">Stream now</NuxtLink>
           </div>
           <IconsBanner class="absolute top-0 right-0 h-full hidden md:block" />
         </div>
