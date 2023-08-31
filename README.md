@@ -20,6 +20,15 @@ The Cross-Chain Salary Streaming dApp is built using cutting-edge technologies t
 
 The yield generated for your DAO comes from the integration with Aave V3. By lending idle funds on Aave's decentralized lending and borrowing markets, your DAO earns interest and rewards, optimizing the use of treasury funds.
 
+## Notes
+
+not all feature is cross-chain compatible, the features that cross-chain compatible are
+- create stream
+- withdraw stream
+- add more fun to the stream
+
+and for claiming reward and cancle the stream you can do it only on goerli/ethereum chain.
+
 ## dPay Flow
 
 ![dPay-flow_page-0001](https://github.com/akbaridria/dPay/assets/26589426/5b2cb464-2306-4fc0-b1b5-cddc766d69c7)
