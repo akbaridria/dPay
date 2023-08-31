@@ -16,6 +16,10 @@ const emit = defineEmits<{
   switchWallet: [value: DetailChain]
 }>()
 
+const txHash = ref<string>('')
+const openModalFaucet = ref<boolean>(false)
+const openModalTx = ref<boolean>(false)
+
 // computed and watcher
 const validNetwork = computed(() :boolean => {
   const chain = chains.filter((item) => item.chainId === useWallet.chainId)
@@ -38,6 +42,10 @@ const getChain = () => {
   return chain[0]
 }
 
+const openModalTransaction = (tx: string) => {
+  txHash.value = tx
+  openModalTx.value = true
+}
 // lifecycle
 </script>
 
@@ -47,6 +55,12 @@ const getChain = () => {
       <div class="flex justify-between">
         <div><LogosDPayLogos class="w-[56px] h-[56px] fill-white" /></div>
         <div class="flex items-center gap-2">
+          <button
+            class="bg-cblack-100 px-[1.25rem] py-[1rem] rounded-xl hover:brightness-150 transition-all flex items-center gap-2 text-white"
+            @click="openModalFaucet = true"
+          >
+            Faucet
+          </button>
           <div 
             v-if="useWallet.chainId > 0"
             class="dropdown"
@@ -97,6 +111,18 @@ const getChain = () => {
         </div>
       </div>
     </div>
-    
+    <!-- start modal   -->
+    <ModalsFaucet 
+      v-if="openModalFaucet"
+      @open-modal-tx="openModalTransaction"
+      @close-modal="openModalFaucet = false"
+    />
+
+    <ModalsTransaction 
+      v-if="openModalTx"
+      :link-tx="txHash"
+      @close-modal="openModalTx = false"
+    />
+    <!-- end modal  -->
   </div>
 </template>

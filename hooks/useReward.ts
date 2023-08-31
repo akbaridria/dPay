@@ -40,6 +40,7 @@ export const claimReward = async (contractAddress: string) :Promise<string> => {
     const provider = new ethers.BrowserProvider((window as any).ethereum)
     const dPay = DPay__factory.connect(contractAddress, await provider.getSigner())
     const tx = await dPay.claim()
+    await delay(2000)
     return tx.hash
   }
   return ''
